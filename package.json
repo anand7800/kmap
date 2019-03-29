@@ -1,0 +1,23 @@
+{
+  "name": "k-map",
+  "version": "1.0.0",
+  "description": "collage management site",
+  "main": "nodemon server.js",
+  "scripts": {
+    "test": "nodemon server.js"
+  },
+  "author": "Anand yadav",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "md5": "^2.2.1",
+    "mongoose": "^5.4.19",
+    "nodemailer": "^5.1.1",
+    "nodemon": "^1.18.10",
+    "twilio": "^3.29.0"
+  }
+}
