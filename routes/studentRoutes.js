@@ -41,4 +41,33 @@ router.post('/findPath',(req,res)=>{
         }
     })
 })
+
+router.post('/createEvent',(req,res)=>{
+    studentServices.createEvent(req.body,req.headers,(err,response)=>{
+        if(err) console.log(err)
+        else{
+            res.send(response);
+        }
+    })
+})
+
+router.post('/eventData',(req,res)=>{
+    studentServices.eventData(req.body,req.headers,(err,response)=>{
+        if(err) console.log(err)
+        else{
+            res.send(response);
+        }
+    })
+})
+
+router.post('/addParticipent',(req,res)=>{
+    //console.log(req.body);
+    studentServices.addParticipent(req.body,req.headers,(err,response)=>{
+        if(err) console.log(err)
+        else{
+            res.send(response);
+        }
+    })
+})
+
 module.exports = router;

@@ -121,7 +121,7 @@ let statusMessage = {
     EMAIL_ALREADY_VERIFIED: 'Email has  been already verified!.',
     PASSWORD_CHANGED: 'Your Password has changed successfully.',
     ADDED_FAVOURITE : 'Coin added as favourite',
-    ALREADY_ADDED : 'Selected coin is already favourite',
+    ALREADY_ADDED : 'given id is alredy added',
     COIN_REMOVED : 'Coin removed from favourite',
     ADDED_IN_WATCHLIST : 'Coin added in watchlist',
     ALREADY_ADDED_WATCHLIST : 'coin already in watchlist.',
@@ -139,7 +139,9 @@ let statusMessage = {
     EMAIL_SENT: 'check your inbox',
     FORGOT_PASSWORD: 'forgot password',
     SUCCESS: 'sucess',
-    APPLICATION_SENT : 'application sent sucesssfully'
+    APPLICATION_SENT : 'application sent sucesssfully',
+    EVENT_CREATED: 'event created',
+    PARTICIPENT_ADDED: 'participent added sucessfully'
 
 
 };

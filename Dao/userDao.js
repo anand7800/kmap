@@ -39,6 +39,9 @@ let viewProfile = function(criteria,callback){
 }
 
 
+let getTeacher = function(criteria,criteria2,callback){
+    userModel.findOne(criteria,criteria2, callback)
+}
 
 //=============================================================
 module.exports = {
@@ -49,5 +52,6 @@ module.exports = {
     updateOtp: updateOtp,
     updatePassword : updatePassword,
     updateProfile: updateProfile,
-    viewProfile: viewProfile
+    viewProfile: viewProfile,
+    getTeacher: getTeacher 
 }

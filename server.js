@@ -2,6 +2,7 @@ let util = require('./utilities/util'),
     config = require('./utilities/config').config,
     userRoutes = require('./routes/userRoutes'),
     studentRoutes = require('./routes/studentRoutes');
+    satffRoutes = require('./routes/satffRoutes')
 
 
 let app = require('express')(),
@@ -23,6 +24,7 @@ let app = require('express')(),
 
     app.use('/user', userRoutes);
     app.use('/student', studentRoutes);
+    app.use('/staff',satffRoutes);
 
     server.listen(config.NODE_SERVER_PORT.port,()=>{
         console.log("app listing on :", config.NODE_SERVER_PORT.port)

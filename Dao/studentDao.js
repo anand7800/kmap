@@ -1,5 +1,6 @@
 let userModel = require('../model/userModel');
 let applicationModel = require('../model/applicationModel');
+let eventModel = require('../model/eventModel');
 
 let findUser = (criteria,criteria2,callback)=>{
    // console.log(criteria);
@@ -11,9 +12,41 @@ let applyApplication = (criteria,callback)=>{
 }
 
 let getApplication = (criteria,criteria2,callback)=>{
-    applicationModel.find(criteria,{_id :0}).populate({path : 'pertionalInfo',select : {name  :1, id: 1,
-        branch: 1, year: 1, sec: 1, course: 1, mobileNo: 1, permanentAdd: 1, fatherMobileNo: 1, localAddress: 1,
+    applicationModel.find(criteria,{_id :0}).populate({path : 'pertionalInfo',select : {name  :1, id: 1,branch: 1, year: 1, sec: 1, course: 1, mobileNo: 1, permanentAdd: 1, fatherMobileNo: 1, localAddress: 1,
         localGardian: 1, localGardianAddress: 1}}).exec(callback)
+}
+
+let createEvent = (criteria,callback)=>{
+    eventModel.create(criteria,callback)
+}
+
+let pushref = (criteria,criteria2,callback)=>{
+    console.log(criteria,criteria2)
+    eventModel.updateOne(criteria,{$push: criteria2},callback)
+}
+
+
+let eventData = (criteria,criteria2,callback)=>{
+    console.log(criteria);
+    eventModel.find(criteria).populate('subEvent').exec(callback)
+}
+
+
+let getevent = (criteria,callback)=>{
+//     console.log("===========",criteria)
+    eventModel.findOne(criteria,callback)
+}
+
+
+let test = (criteria,criteria2,callback) =>{
+    applicationModel.aggregate([
+        {
+          $project:
+           {
+              first: { $arrayElemAt: [ "$sendTo", 0 ] }
+           }
+        }
+     ],callback)
 }
 
 
@@ -21,5 +54,10 @@ let getApplication = (criteria,criteria2,callback)=>{
 module.exports = {
     findUser : findUser,
     applyApplication : applyApplication,
-    getApplication : getApplication
+    getApplication : getApplication,
+    createEvent: createEvent,
+    pushref: pushref,
+    eventData: eventData,
+    getevent: getevent,
+    test: test
 }

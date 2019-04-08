@@ -168,4 +168,47 @@
 
   // ]
 
-console.log(Math.floor(Math.random()*10e9));
+//console.log(Math.floor(Math.random()*10e9));
+
+
+
+/** DIAMOND PIRAMID */
+// function main()
+// {
+//     var i, space, rows, k=0,x ="";
+
+//    rows =5;
+
+//     for(i=1; i<=rows; i++)
+//     {k=0;
+//         for(space=1; space<=rows-i; space++)
+//         {
+//             x+=" ";
+//         }
+
+//         while(k != 2*i-1)
+//         {
+//             x+="*";
+//             ++k;
+//         }
+
+//         x+="\n";
+//     }
+    
+//    console.log(x);
+// }
+
+// main();
+
+
+
+/**TRIANGULAR PIRAMID */
+// var x = "";
+// for(var i = 0; i<4 ;i++){
+//   for(var j=0; j<=i;j++){
+//     x+="*";
+//   }
+//   x+="\n"
+// }
+// console.log(x);
+
