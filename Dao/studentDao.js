@@ -38,17 +38,10 @@ let getevent = (criteria,callback)=>{
 }
 
 
-let test = (criteria,criteria2,callback) =>{
-    applicationModel.aggregate([
-        {
-          $project:
-           {
-              first: { $arrayElemAt: [ "$sendTo", 0 ] }
-           }
-        }
-     ],callback)
+let test = (criteria,criteria2,callback)=>{
+   applicationModel.find({'sendTo.0':criteria}).populate({path : 'pertionalInfo',select : {name  :1, id: 1,branch: 1, year: 1, sec: 1, course: 1, mobileNo: 1, permanentAdd: 1, fatherMobileNo: 1, localAddress: 1,
+       localGardian: 1, localGardianAddress: 1}}).exec(callback)
 }
-
 
 //==================================================================//
 module.exports = {

@@ -40,7 +40,7 @@ let getApplication = (data, header, callback) => {
             //console.log('fffffff',post[0]);
             // post =post[0]
             console.log('fffffff', post);
-            let criteria = {$in: post[0] },
+            let criteria = {$in: post},
                 criteria2 = {}
             studentDao.test(criteria, criteria2, (err, dbData) => {
                 if (err) {
@@ -50,23 +50,51 @@ let getApplication = (data, header, callback) => {
                     cb(null, dbData);
                 }
             })
-        }],
-        applications : ['getApplication',(functionData,cb)=>{
-            var getApplication= functionData.getApplication;
-            for(var x of getApplication){
-                studentDao.getApplication()
-            }
-        }
-    ]
+        }]
     }, (err, res) => {
         callback(null, res);
     })
 }
 
 
+let approveApplication = (data, header, callback) => {
+   var {applicationNo} = data;
+    async.auto({
+        checkUserExistsinDB: (cb) => {
+            if (!header.token) {
+                callback(null, { "code": util.statusCode.FOUR_ZERO_ONE, "message": util.statusMessage.PARAMS_MISSING })
+                return;
+            } else {
+                jwt.verify(header.token, util.secrate.jwtSecrate, function (err, decoded) {
+                    if (err) {
+                        callback(null, { "code": util.statusCode.THREE_ZERO_ZERO, "message": util.statusMessage.INVALID_TOKEN });
+                    } else {
+                        cb(null)
+                    }
+                })
+            }
+        },
+        approve: (cb)=>{
+            criteria = {applicationNo}
+            criteria2 = {}
 
+            staffDao.updateSendTo(criteria,criteria2,(err,dbData)=>{
+                if (err) {
+                    cb(null, { "code": util.statusCode.THREE_ZERO_ZERO, "message": util.statusMessage.DB_ERR, "ERROR": err })
+                    return;
+                } else {
+                    cb(null,{"code":util.statusCode.OK,"message": util.statusMessage.SUCESS, 
+                    "data" : dbData});
+                }
+            })
+        }
+    }, (err, res) => {
+        callback(null, res);
+    })
+}
 
 //=================================================
 module.exports = {
-    getApplication: getApplication
+    getApplication: getApplication,
+    approveApplication: approveApplication
 }

@@ -175,7 +175,7 @@ let findPath = (body,header,callback)=>{
 let createEvent = (data, header, callback)=>{
     let token = header.token
     let {eventName, from, to, coordinater, workingMembers, about, eventId,
-         eventPassword, subEvent,parentId} = data
+         eventPassword,parentId} = data
     
     async.auto({
         checkUserExistsinDB : (cb)=>{
@@ -207,7 +207,7 @@ let createEvent = (data, header, callback)=>{
             })
         }],
         pushref : ['createEvent',(functionData,cb)=>{
-           // console.log(functionData)
+            console.log(functionData)
             let _id = functionData.createEvent.data._id; 
             console.log("==========",_id);
             if(!_id){
