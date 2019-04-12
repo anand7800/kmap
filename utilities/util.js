@@ -86,6 +86,7 @@ let statusMessage = {
     INCORRECT_ID_PASSWORD : 'Please enter correct id password.',
     DOC_UPDATED : 'Document update successfully!',
     INVALID_ID : 'Invalid student id',
+    INVALID_TOKEN: 'invalid token',
     INVALID_TUTOR_ID : 'Invalid tutor id',
     INVALID_TUTOR : 'Invalid tutor, Please try later.',
     STATUS_UPDATED : 'Status updated successfully!.',
@@ -107,12 +108,15 @@ let statusMessage = {
     USER_REGISTERED_SUCCESSFULLY : 'You have registered successfully. Please login to continue',
     PLEASE_SIGNUP_FIRST: 'Your email is not Registered, Please Sign up First.',
     LOGGED_IN: 'You have sucessfully Logged in',
+
     NO_TUTOR_ONLINE : 'No any tutor online now.',
     ENTER_VALID_CUSTOMERID_PASS: 'Please enter your valid email and password.',
     EMAIL_NOT_EXIST: 'Your Email address is not registered, please Sign up to continue.',
     OTP_VERIFY_SUCCESS: ' Set your new password.',
     PLEASE_ENTER_VALID_EMAIL: 'Please enter valid email ',
-	SOCIAL_ACCOUNT : 'forget password is not requested because its social login',
+    SOCIAL_ACCOUNT : 'forget password is not requested because its social login',
+    REMOVED: 'application removedd sucessfully',
+    APPLICATION_DOES_NOT_EXIST: 'the given application does not exist',
 	OTP_VERIFY_EMAIL: 'Activation message has sent to your registered email, please go through the OTP sent.',
     INVALID_OTP : 'OTP is invalid, Please try again.',
     OTP_EXPIRED : 'Above otp has expired. Please try again.',
@@ -141,7 +145,11 @@ let statusMessage = {
     SUCCESS: 'sucess',
     APPLICATION_SENT : 'application sent sucesssfully',
     EVENT_CREATED: 'event created',
-    PARTICIPENT_ADDED: 'participent added sucessfully'
+    PARTICIPENT_ADDED: 'participent added sucessfully',
+    APPROVED: 'your application is approved now',
+    APPLICATION_CANCLED: 'application is cancled now',
+    ALREADY_APPROVED: 'can not be approved or cancled anymore',
+    CAN_NOT_BE_PROCESSED: 'this application can not be processed'
 
 
 };

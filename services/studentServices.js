@@ -318,6 +318,60 @@ let addParticipent = (data, header, callback) =>{
     
 }
 
+let removeApplication = (data,header,callback)=>{
+
+    let loginInfo,
+        token = header.token,
+        {applicationNo} =data;
+
+
+    if(!token ){
+        callback(null,{"code": util.statusCode.FOUR_ZERO_ONE, "message": util.statusMessage.PARAMS_MISSING})
+        return;
+    }else{
+        jwt.verify(header.token, util.secrate.jwtSecrate, function(err, decoded) {
+            if (err){
+                callback(null,{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN});
+                return;
+            }
+            loginInfo = decoded;
+        })
+    }      
+    async.auto({
+        checkUserExistsinDB: (cb)=>{
+            criteria = {
+                id : loginInfo.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData || dbData.user != "student"){
+                    cb("err",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.INVALID_TOKEN})
+                    return;
+                }else{
+                    cb(null,dbData);
+                }
+            })
+        },
+        removeApplication: (cb)=>{
+            criteria = {applicationNo}
+            studentDao.removeApplication(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb(null,{"code": util.statusCode.OK, "message":util.statusMessage.APPLICATION_DOES_NOT_EXIST});
+                }else{
+                    cb(null,{"code": util.statusCode.OK, "message":util.statusMessage.REMOVED});
+                }
+            })
+        }  
+    },(err,res)=>{
+        callback(null,res.removeApplication);
+    })
+}
 //======================================================================
 module.exports = {
     findUser: findUser,
@@ -327,5 +381,6 @@ module.exports = {
     findPath: findPath,
     createEvent : createEvent,
     eventData: eventData,
-    addParticipent: addParticipent
+    addParticipent: addParticipent,
+    removeApplication: removeApplication
 }

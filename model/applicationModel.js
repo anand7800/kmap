@@ -14,7 +14,7 @@ var applicationSchema = mongoose.Schema({
     },
     appiedAt : {
         type : Date,
-        default : Date.now
+        default : new Date()
     },
     subject : {
         type : String
@@ -23,10 +23,12 @@ var applicationSchema = mongoose.Schema({
         type: String
     },
     timeFrom: {
-        type : Date
+        type : Date,
+        default : new Date()
     },
     timeTo : {
-        type : Date
+        type : Date,
+        default : new Date(new Date().setHours( new Date().getHours() + 1 )).toISOString()
     },
     resion : {
         type : String
@@ -37,6 +39,11 @@ var applicationSchema = mongoose.Schema({
     pertionalInfo: [{ type: Schema.Types.ObjectId, ref: 'user' }],
     id: {
         type : Number
+    },
+    status : {
+        type: String,
+        enum: ["pending","approved","cancled","checkedin","checkedout"],
+        default: 'pending'
     }
 })
 

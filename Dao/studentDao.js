@@ -43,6 +43,11 @@ let test = (criteria,criteria2,callback)=>{
        localGardian: 1, localGardianAddress: 1}}).exec(callback)
 }
 
+
+let removeApplication = (criteria,callback)=>{
+        applicationModel.findOneAndDelete(criteria,callback)
+    }
+
 //==================================================================//
 module.exports = {
     findUser : findUser,
@@ -52,5 +57,6 @@ module.exports = {
     pushref: pushref,
     eventData: eventData,
     getevent: getevent,
-    test: test
+    test: test,
+    removeApplication: removeApplication
 }

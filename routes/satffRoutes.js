@@ -19,5 +19,24 @@ let express = require('express'),
         })
     })
 
+    router.post('/cancleApplication',(req,res)=>{
+        satffServices.cancleApplication(req.body,req.headers,(err,response)=>{
+            if(err) console.log(err,"router error");
+            else res.send(response);
+        })
+    })
 
+    router.post('/checkinCheckout',(req,res)=>{
+        satffServices.checkinCheckout(req.body,req.headers,(err,response)=>{
+            if(err) console.log(err,"router error");
+            else res.send(response);
+        })
+    })
+
+    router.post('/approvedList',(req,res)=>{
+        satffServices.approvedList(req.body,req.headers,(err,response)=>{
+            if(err) console.log(err,"router error");
+            else res.send(response);
+        })
+    })
     module.exports = router;

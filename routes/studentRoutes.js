@@ -70,4 +70,14 @@ router.post('/addParticipent',(req,res)=>{
     })
 })
 
+
+router.post('/removeApplication',(req,res)=>{
+    //console.log(req.body);
+    studentServices.removeApplication(req.body,req.headers,(err,response)=>{
+        if(err) console.log(err)
+        else{
+            res.send(response);
+        }
+    })
+})
 module.exports = router;
