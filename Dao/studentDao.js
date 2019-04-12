@@ -21,13 +21,13 @@ let createEvent = (criteria,callback)=>{
 }
 
 let pushref = (criteria,criteria2,callback)=>{
-    console.log(criteria,criteria2)
+    //console.log(criteria,criteria2)
     eventModel.updateOne(criteria,{$push: criteria2},callback)
 }
 
 
 let eventData = (criteria,criteria2,callback)=>{
-    console.log(criteria);
+   // console.log(criteria);
     eventModel.find(criteria).populate('subEvent').exec(callback)
 }
 
@@ -48,6 +48,11 @@ let removeApplication = (criteria,callback)=>{
         applicationModel.findOneAndDelete(criteria,callback)
     }
 
+
+let popref = (criteria,criteria2,callback)=>{
+    //console.log(criteria,criteria2)
+    eventModel.updateOne(criteria,{$pull:{participent:criteria2}},callback)
+}
 //==================================================================//
 module.exports = {
     findUser : findUser,
@@ -58,5 +63,6 @@ module.exports = {
     eventData: eventData,
     getevent: getevent,
     test: test,
-    removeApplication: removeApplication
+    removeApplication: removeApplication,
+    popref: popref
 }

@@ -149,7 +149,9 @@ let statusMessage = {
     APPROVED: 'your application is approved now',
     APPLICATION_CANCLED: 'application is cancled now',
     ALREADY_APPROVED: 'can not be approved or cancled anymore',
-    CAN_NOT_BE_PROCESSED: 'this application can not be processed'
+    CAN_NOT_BE_PROCESSED: 'this application can not be processed',
+    TOKEN_EXPIRED: 'this token has been expired',
+    APPLICATION_DOEST_NOT_EXIST: 'application does not exist'
 
 
 };

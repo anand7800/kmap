@@ -9,8 +9,33 @@ let async = require('async'),
 
 
 let getApplication = (data, header, callback) => {
-
+    let token = header.token;
     async.auto({
+
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData || dbData.user != "staff"){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
         checkUserExistsinDB: (cb) => {
             if (!header.token) {
                 callback(null, { "code": util.statusCode.FOUR_ZERO_ONE, "message": util.statusMessage.PARAMS_MISSING })
@@ -27,7 +52,6 @@ let getApplication = (data, header, callback) => {
                                 cb(null, { "code": util.statusCode.THREE_ZERO_ZERO, "message": util.statusMessage.DB_ERR, "ERROR": err })
                                 return;
                             } else {
-                                console.log(dbData);
                                 cb(null, dbData);
                             }
                         })
@@ -39,7 +63,6 @@ let getApplication = (data, header, callback) => {
             let post = functionData.checkUserExistsinDB.post;
             //console.log('fffffff',post[0]);
             // post =post[0]
-            console.log('fffffff', post);
             let criteria = {$in: post},
                 criteria2 = {}
             studentDao.test(criteria, criteria2, (err, dbData) => {
@@ -58,8 +81,33 @@ let getApplication = (data, header, callback) => {
 
 
 let approveApplication = (data, header, callback) => {
-   var {applicationNo} = data;
+   var {applicationNo} = data
+        token = header.token;
     async.auto({
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData || dbData.user != "staff"){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
         checkUserExistsinDB: (cb) => {
             if (!header.token) {
                 callback(null, { "code": util.statusCode.FOUR_ZERO_ONE, "message": util.statusMessage.PARAMS_MISSING })
@@ -76,6 +124,8 @@ let approveApplication = (data, header, callback) => {
                         if (err) {
                             cb(null, { "code": util.statusCode.THREE_ZERO_ZERO, "message": util.statusMessage.DB_ERR, "ERROR": err })
                             return;
+                        }else if(!dbData){
+                            cb("err",{"code": util.statusCode.OK, "message": util.statusMessage.APPLICATION_DOES_NOT_EXIST})
                         }else if(dbData.status == 'approved' || dbData.status == 'cancled'){
                             cb("err",{"code": util.statusCode.OK, "message": util.statusMessage.ALREADY_APPROVED})
                             return;
@@ -135,8 +185,34 @@ let approveApplication = (data, header, callback) => {
 
 
 let cancleApplication = (data, header, callback) => {
-    var {applicationNo} = data;
+    var {applicationNo} = data,
+        token = header.token;
      async.auto({
+
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData || dbData.user != "staff"){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
          checkUserExistsinDB: (cb) => {
              if (!header.token) {
                  callback(null, { "code": util.statusCode.FOUR_ZERO_ONE, "message": util.statusMessage.PARAMS_MISSING })

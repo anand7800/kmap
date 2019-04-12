@@ -251,11 +251,24 @@ let updateProfile = (data,header,callback)=>{
 			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
                // console.log("ddddddd",decoded)
 			if (err){
-				cb(null,{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
 				return;
             }
-				cb(null, decoded );
-				return;
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb("err",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
 			})
         },
         updateProfile : ['jwtVerify',(functionData,cb)=>{
@@ -277,7 +290,7 @@ let updateProfile = (data,header,callback)=>{
 
 
     },(err,res)=>{
-        callback(null,res.updateProfile);
+        callback(null,res);
     })
 }
 
@@ -287,11 +300,24 @@ let viewProfile = (header,callback)=>{
 			jwt.verify(header.token, util.secrate.jwtSecrate, (err, decoded)=> { 
                // console.log("ddddddd",decoded)
 			if (err){
-				cb(null,{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
 				return;
             }
-				cb(null, decoded );
-				return;
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb("err",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
 			})
         },
        viewProfile : ['jwtVerify',(functionData,cb)=>{
@@ -308,7 +334,7 @@ let viewProfile = (header,callback)=>{
            })
        }] 
     },(err,res)=>{
-        callback(null,res.viewProfile)
+        callback(null,res)
     })
 }
 

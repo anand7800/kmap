@@ -27,11 +27,24 @@ let findUser = (data,header,callback)=>{
 			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
                // console.log("ddddddd",decoded)
 			if (err){
-				cb(null,{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
 				return;
             }
-				cb(null);
-				return;
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
 			})
         },
         findUser : (cb)=>{
@@ -66,6 +79,31 @@ let applyApplication = (data,header,callback)=>{
     let token = header.token;
     let {applicationType, sendTo, subject, content, timeFrom, timeTo, resion, goingTo} = data;
     async.auto({
+
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
         checkUserExistsinDB : (cb)=>{
             if(!header.token){
                 cb(null, { "statusCode": util.statusCode.FOUR_ZERO_ONE, "statusMessage": util.statusMessage.PARAMS_MISSING })
@@ -113,13 +151,38 @@ let applyApplication = (data,header,callback)=>{
         }]
 
     },(err,res)=>{
-        callback(null,res.applyApplication);
+        callback(null,res);
     })
 }
 
 let getApplication = (header,callback)=>{
     let token = header.token ;
     async.auto ({
+
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
         checkUserExistsinDB : (cb)=>{
             if(!header.token){
                 cb(null, { "statusCode": util.statusCode.FOUR_ZERO_ONE, "statusMessage": util.statusMessage.PARAMS_MISSING })
@@ -164,7 +227,7 @@ let getApplication = (header,callback)=>{
             })
         }]        
     },(err,res)=>{
-        callback(null,res.getApplication);
+        callback(null,res);
     })
 }
 
@@ -178,6 +241,55 @@ let createEvent = (data, header, callback)=>{
          eventPassword,parentId} = data
     
     async.auto({
+        loginVallidation : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData || !(dbData.post[0] == "proctor" || dbData.user == "event")){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
+
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
         checkUserExistsinDB : (cb)=>{
             if(!token){
                 callback(null, { "code": util.statusCode.FOUR_ZERO_ONE, "message": util.statusMessage.PARAMS_MISSING })
@@ -207,9 +319,7 @@ let createEvent = (data, header, callback)=>{
             })
         }],
         pushref : ['createEvent',(functionData,cb)=>{
-            console.log(functionData)
             let _id = functionData.createEvent.data._id; 
-            console.log("==========",_id);
             if(!_id){
                 cb(null, { "code": util.statusCode.FOUR_ZERO_ONE, "message": util.statusMessage.PARAMS_MISSING })
                 return;
@@ -238,8 +348,34 @@ let createEvent = (data, header, callback)=>{
 }
 
 let eventData = (data,header, callback)=>{
-    let {eventId} = data
+    let {eventId} = data,
+        token = header.token;
     async.auto({
+
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
         checkUserExistsinDB : (cb)=>{
             if(!header.token){
                 //console.log("111111111111");
@@ -273,23 +409,45 @@ let eventData = (data,header, callback)=>{
             })
         }]
     },(err,res)=>{
-        callback(null, res.eventData)
+        callback(null, res)
     })
 
 }
 
 let addParticipent = (data, header, callback) =>{
-    let {eventId,id,name} = data;
+    let {eventId,id,name} = data,
+        token = header.token;
 
     async.auto({
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData || !(dbData.post[0] == "proctor" || dbData.user == "event")){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
         checkUserExistsinDB : (cb)=>{
             if(!header.token){
-                console.log("111111111111");
                 callback(null,{ "code": util.statusCode.FOUR_ZERO_ONE, "message": util.statusMessage.PARAMS_MISSING })
                 return;
             }else{
-                console.log("222222222222222");
-
                 jwt.verify(header.token, util.secrate.jwtSecrate, function(err, decoded) {
                     if (err){
                         callback(null,{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN});
@@ -338,6 +496,30 @@ let removeApplication = (data,header,callback)=>{
         })
     }      
     async.auto({
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
         checkUserExistsinDB: (cb)=>{
             criteria = {
                 id : loginInfo.id,
@@ -372,6 +554,108 @@ let removeApplication = (data,header,callback)=>{
         callback(null,res.removeApplication);
     })
 }
+
+
+
+let removeParticipent = (data, header, callback) =>{
+    let {eventId,id} = data,
+        token = header.token;
+
+    async.auto({
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData || !(dbData.post[0] == "proctor" || dbData.user == "event")){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
+        removeParticipent : (cb)=>{
+            let criteria = {eventId},
+                criteria2 = {id}
+               
+            studentDao.popref(criteria,criteria2,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else{
+                    cb(null,dbData);
+                }
+            })
+        } 
+    },(err,res)=>{
+        callback(null,{"code":util.statusCode.OK,"message": util.statusMessage.PARTICIPENT_ADDED, 
+        "data" : res});
+    })
+    
+}
+
+//progress..................................
+let performanceUpdate = (data, header, callback) =>{
+    let {eventId,id} = data,
+        token = header.token;
+
+    async.auto({
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData || !(dbData.post[0] == "proctor" || dbData.user == "event")){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
+        removeParticipent : (cb)=>{
+            let criteria = {eventId},
+                criteria2 = {id}
+               
+            studentDao.popref(criteria,criteria2,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else{
+                    cb(null,dbData);
+                }
+            })
+        } 
+    },(err,res)=>{
+        callback(null,{"code":util.statusCode.OK,"message": util.statusMessage.PARTICIPENT_ADDED, 
+        "data" : res});
+    })
+    
+}
+
 //======================================================================
 module.exports = {
     findUser: findUser,
@@ -382,5 +666,7 @@ module.exports = {
     createEvent : createEvent,
     eventData: eventData,
     addParticipent: addParticipent,
-    removeApplication: removeApplication
+    removeApplication: removeApplication,
+    removeParticipent: removeParticipent,
+    performanceUpdate: performanceUpdate
 }

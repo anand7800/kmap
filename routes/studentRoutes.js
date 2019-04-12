@@ -71,9 +71,19 @@ router.post('/addParticipent',(req,res)=>{
 })
 
 
-router.post('/removeApplication',(req,res)=>{
+router.post('/removeParticipent',(req,res)=>{
     //console.log(req.body);
-    studentServices.removeApplication(req.body,req.headers,(err,response)=>{
+    studentServices.removeParticipent(req.body,req.headers,(err,response)=>{
+        if(err) console.log(err)
+        else{
+            res.send(response);
+        }
+    })
+})
+
+router.post('/performanceUpdate',(req,res)=>{
+    //console.log(req.body);
+    studentServices.performanceUpdate(req.body,req.headers,(err,response)=>{
         if(err) console.log(err)
         else{
             res.send(response);
