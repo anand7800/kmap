@@ -33,14 +33,6 @@ router.get('/getApplication',(req,res)=>{
     })
 })
 
-router.post('/findPath',(req,res)=>{
-    studentServices.findPath(req.body,req.headers,(err,response)=>{
-        if(err) console.log(err)
-        else{
-            res.send(response);
-        }
-    })
-})
 
 router.post('/createEvent',(req,res)=>{
     studentServices.createEvent(req.body,req.headers,(err,response)=>{
@@ -84,6 +76,24 @@ router.post('/removeParticipent',(req,res)=>{
 router.post('/performanceUpdate',(req,res)=>{
     //console.log(req.body);
     studentServices.performanceUpdate(req.body,req.headers,(err,response)=>{
+        if(err) console.log(err)
+        else{
+            res.send(response);
+        }
+    })
+})
+
+router.post('/findPath',(req,res)=>{
+    studentServices.findPath(req.body,req.headers,(err,response)=>{
+        if(err) console.log(err)
+        else{
+            res.send(response);
+        }
+    })
+})
+
+router.post('/likePerformance',(req,res)=>{
+    studentServices.likePerformance(req.body,req.headers,(err,response)=>{
         if(err) console.log(err)
         else{
             res.send(response);

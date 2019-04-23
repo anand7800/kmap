@@ -53,6 +53,15 @@ let popref = (criteria,criteria2,callback)=>{
     //console.log(criteria,criteria2)
     eventModel.updateOne(criteria,{$pull:{participent:criteria2}},callback)
 }
+
+let like = (criteria,callback)=>{
+    eventModel.findOneAndUpdate({'participent.id':criteria.id},
+          {'$inc':{'participent.$.likes':1}},
+      // {'participent.name':"kamal"},
+    
+    callback)
+
+}
 //==================================================================//
 module.exports = {
     findUser : findUser,
@@ -64,5 +73,6 @@ module.exports = {
     getevent: getevent,
     test: test,
     removeApplication: removeApplication,
-    popref: popref
+    popref: popref,
+    like: like
 }

@@ -30,7 +30,7 @@ let eventSchema = mongoose.Schema({
     subEvent: [{ type: Schema.Types.ObjectId, ref: 'event' }],
     participent: [{
         timeOn : {type: Date},
-        likes : {type: Number},
+        likes : {type: Number, default: 0},
         status : {type: Number},
         id : {type: Number},
         name : {type : String}

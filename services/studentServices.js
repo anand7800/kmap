@@ -1,6 +1,7 @@
 let studentDao = require('../Dao/studentDao'),
     userDao = require('../Dao/userDao'),
-    util =require('../utilities/util')    ;
+    util =require('../utilities/util'),
+    operation = require('../commonFunction/operation');
 
     let async = require('async'),
         jwt = require('jsonwebtoken'),
@@ -229,10 +230,6 @@ let getApplication = (header,callback)=>{
     },(err,res)=>{
         callback(null,res);
     })
-}
-
-let findPath = (body,header,callback)=>{
-    
 }
 
 let createEvent = (data, header, callback)=>{
@@ -656,17 +653,78 @@ let performanceUpdate = (data, header, callback) =>{
     
 }
 
+let findPath = (data, header, callback)=>{
+    let {startPoint, endPoint} = data,
+        token= header.token
+
+    async.auto({
+        jwtVerify : (cb)=>{
+			jwt.verify(token, util.secrate.jwtSecrate, (err, decoded)=> { 
+               // console.log("ddddddd",decoded)
+			if (err){
+				cb("null",{"code":util.statusCode.THREE_ZERO_ZERO,"message":util.statusMessage.INVALID_TOKEN, "error": err});
+				return;
+            }
+            criteria = {
+                id : decoded.id,
+                token: header.token
+            }
+            userDao.getUsers(criteria,(err,dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }else if(!dbData){
+                    cb("null",{"code": util.statusCode.BAD_REQUEST,"meaasge": util.statusMessage.TOKEN_EXPIRED})
+                    return;
+                }else{
+                    cb(null,decoded);
+                }
+            })
+			})
+        },
+       findPath: (cb)=>{
+            operation.pathFinder(startPoint, endPoint,(data)=>{
+                cb(null, data)
+            })
+       } 
+    },(err,res)=>{
+        callback(null,res)
+    })
+
+}
+
+let likePerformance = (data, header, callback)=>{
+    let {id, eventId} = data
+    async.auto({
+       likePerformance: (cb)=>{
+            criteria={id, eventId}
+            
+             studentDao.like(criteria,(err, dbData)=>{
+                if(err){
+                    cb(null,{ "code" : util.statusCode.THREE_ZERO_ZERO,"message" : util.statusMessage.DB_ERR,"ERROR": err})
+                    return;
+                }
+                cb(null,dbData);
+             })
+       } 
+    },(err,res)=>{
+        callback(null,res)
+    })
+
+}
+
 //======================================================================
 module.exports = {
     findUser: findUser,
     applyApplication: applyApplication,
     getApplication: getApplication,
     getApplication: getApplication,
-    findPath: findPath,
     createEvent : createEvent,
     eventData: eventData,
     addParticipent: addParticipent,
     removeApplication: removeApplication,
     removeParticipent: removeParticipent,
-    performanceUpdate: performanceUpdate
+    performanceUpdate: performanceUpdate,
+    findPath: findPath,
+    likePerformance: likePerformance
 }
